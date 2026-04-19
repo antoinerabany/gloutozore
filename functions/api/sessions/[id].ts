@@ -1,9 +1,11 @@
 interface Env {
   DB: D1Database;
+  AUTH_TOKEN: string;
 }
 
-function getUserEmail(request: Request): string | null {
-  return request.headers.get("CF-Access-Authenticated-User-Email");
+function isAuthorized(request: Request, env: Env): boolean {
+  const header = request.headers.get("Authorization");
+  return header === `Bearer ${env.AUTH_TOKEN}`;
 }
 
 export const onRequestPut: PagesFunction<Env> = async ({
@@ -11,8 +13,8 @@ export const onRequestPut: PagesFunction<Env> = async ({
   env,
   params,
 }) => {
-  const email = getUserEmail(request);
-  if (!email) return new Response("Unauthorized", { status: 401 });
+  if (!isAuthorized(request, env))
+    return new Response("Unauthorized", { status: 401 });
 
   const id = params.id as string;
   const body = (await request.json()) as {
@@ -36,10 +38,10 @@ export const onRequestPut: PagesFunction<Env> = async ({
     return Response.json({ ok: true });
   }
 
-  values.push(id, email);
+  values.push(id);
 
   await env.DB.prepare(
-    `UPDATE sessions SET ${fields.join(", ")} WHERE id = ? AND user_email = ?`
+    `UPDATE sessions SET ${fields.join(", ")} WHERE id = ?`
   )
     .bind(...values)
     .run();
@@ -52,15 +54,13 @@ export const onRequestDelete: PagesFunction<Env> = async ({
   env,
   params,
 }) => {
-  const email = getUserEmail(request);
-  if (!email) return new Response("Unauthorized", { status: 401 });
+  if (!isAuthorized(request, env))
+    return new Response("Unauthorized", { status: 401 });
 
   const id = params.id as string;
 
-  await env.DB.prepare(
-    "DELETE FROM sessions WHERE id = ? AND user_email = ?"
-  )
-    .bind(id, email)
+  await env.DB.prepare("DELETE FROM sessions WHERE id = ?")
+    .bind(id)
     .run();
 
   return Response.json({ ok: true });

@@ -1,22 +1,27 @@
 import { useState, useEffect } from "preact/hooks";
 import { addSession, syncFromServer } from "./lib/storage";
+import { getToken } from "./lib/api";
+import { Login } from "./components/Login";
 import { HomeScreen } from "./components/HomeScreen";
 import { ActiveFeeding } from "./components/ActiveFeeding";
 import { History } from "./components/History";
 import "./app.css";
 
-type Screen = "home" | "feeding" | "history";
+type Screen = "login" | "home" | "feeding" | "history";
 
 export function App() {
-  const [screen, setScreen] = useState<Screen>("home");
+  const [screen, setScreen] = useState<Screen>(
+    getToken() ? "home" : "login"
+  );
   const [activeBreast, setActiveBreast] = useState<"left" | "right">("left");
   const [, setSync] = useState(0);
 
   useEffect(() => {
+    if (screen === "login") return;
     syncFromServer()
       .then(() => setSync((n) => n + 1))
       .catch(console.error);
-  }, []);
+  }, [screen === "login"]);
 
   function handleStart(breast: "left" | "right") {
     setActiveBreast(breast);
@@ -38,6 +43,8 @@ export function App() {
   }
 
   switch (screen) {
+    case "login":
+      return <Login onLogin={() => setScreen("home")} />;
     case "feeding":
       return (
         <ActiveFeeding

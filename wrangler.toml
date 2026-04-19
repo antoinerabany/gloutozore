@@ -5,4 +5,4 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "gloutozore-db"
-database_id = "" # will be filled after `wrangler d1 create gloutozore-db`
+database_id = "f9cb6752-c78d-4f4b-949d-6e864ac2aae3"
