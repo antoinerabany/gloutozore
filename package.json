@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && wrangler pages deploy",
+    "db:migrate": "wrangler d1 migrations apply gloutozore-db --remote"
   },
   "dependencies": {
     "preact": "^10.29.1"
@@ -15,6 +17,7 @@
     "@preact/preset-vite": "^2.10.5",
     "@types/node": "^24.12.2",
     "typescript": "~6.0.2",
-    "vite": "^8.0.4"
+    "vite": "^8.0.4",
+    "wrangler": "^4.83.0"
   }
 }

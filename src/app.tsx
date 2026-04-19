@@ -1,5 +1,5 @@
-import { useState } from "preact/hooks";
-import { addSession } from "./lib/storage";
+import { useState, useEffect } from "preact/hooks";
+import { addSession, syncFromServer } from "./lib/storage";
 import { HomeScreen } from "./components/HomeScreen";
 import { ActiveFeeding } from "./components/ActiveFeeding";
 import { History } from "./components/History";
@@ -10,6 +10,13 @@ type Screen = "home" | "feeding" | "history";
 export function App() {
   const [screen, setScreen] = useState<Screen>("home");
   const [activeBreast, setActiveBreast] = useState<"left" | "right">("left");
+  const [, setSync] = useState(0);
+
+  useEffect(() => {
+    syncFromServer()
+      .then(() => setSync((n) => n + 1))
+      .catch(console.error);
+  }, []);
 
   function handleStart(breast: "left" | "right") {
     setActiveBreast(breast);
