@@ -1,6 +1,6 @@
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import type { FeedingSession } from "../lib/types";
-import { getSessions, deleteSession, updateSession } from "../lib/storage";
+import { getSessions, deleteSession, updateSession, syncFromServer } from "../lib/storage";
 
 function formatTime(iso: string): string {
   return new Date(iso).toLocaleTimeString([], {
@@ -33,6 +33,12 @@ interface Props {
 export function History({ onBack }: Props) {
   const [sessions, setSessions] = useState(getSessions);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    syncFromServer()
+      .then((remote) => setSessions(remote))
+      .catch(console.error);
+  }, []);
 
   const grouped = groupByDay(sessions);
 
