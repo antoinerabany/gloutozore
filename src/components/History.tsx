@@ -9,12 +9,6 @@ function formatTime(iso: string): string {
   });
 }
 
-function formatDuration(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return m > 0 ? `${m}min${s > 0 ? ` ${s}s` : ""}` : `${s}s`;
-}
-
 function groupByDay(
   sessions: FeedingSession[]
 ): Map<string, FeedingSession[]> {
@@ -83,8 +77,9 @@ export function History({ onBack }: Props) {
               </span>
               <span class="session-time">{formatTime(s.startedAt)}</span>
               <span class="session-duration">
-                {formatDuration(s.durationSeconds)}
+                {s.durationMinutes != null ? `${s.durationMinutes}min` : ""}
               </span>
+              {s.note && <span class="session-note">{s.note}</span>}
               {editingId === s.id && (
                 <div class="session-actions" onClick={(e) => e.stopPropagation()}>
                   <button

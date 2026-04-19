@@ -19,19 +19,24 @@ export const onRequestPut: PagesFunction<Env> = async ({
   const id = params.id as string;
   const body = (await request.json()) as {
     breast?: string;
-    durationSeconds?: number;
+    durationMinutes?: number | null;
+    note?: string | null;
   };
 
   const fields: string[] = [];
-  const values: (string | number)[] = [];
+  const values: (string | number | null)[] = [];
 
   if (body.breast) {
     fields.push("breast = ?");
     values.push(body.breast);
   }
-  if (body.durationSeconds !== undefined) {
-    fields.push("duration_seconds = ?");
-    values.push(body.durationSeconds);
+  if (body.durationMinutes !== undefined) {
+    fields.push("duration_minutes = ?");
+    values.push(body.durationMinutes);
+  }
+  if (body.note !== undefined) {
+    fields.push("note = ?");
+    values.push(body.note);
   }
 
   if (fields.length === 0) {

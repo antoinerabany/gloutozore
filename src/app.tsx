@@ -3,7 +3,7 @@ import { addSession, syncFromServer } from "./lib/storage";
 import { getToken } from "./lib/api";
 import { Login } from "./components/Login";
 import { HomeScreen } from "./components/HomeScreen";
-import { ActiveFeeding } from "./components/ActiveFeeding";
+import { FeedingDetails } from "./components/FeedingDetails";
 import { History } from "./components/History";
 import "./app.css";
 
@@ -28,17 +28,14 @@ export function App() {
     setScreen("feeding");
   }
 
-  function handleStop(durationSeconds: number) {
+  function handleSave(durationMinutes: number | null, note: string | null) {
     addSession({
       id: crypto.randomUUID(),
       breast: activeBreast,
-      startedAt: new Date(Date.now() - durationSeconds * 1000).toISOString(),
-      durationSeconds,
+      startedAt: new Date().toISOString(),
+      durationMinutes,
+      note,
     });
-    setScreen("home");
-  }
-
-  function handleCancel() {
     setScreen("home");
   }
 
@@ -47,10 +44,10 @@ export function App() {
       return <Login onLogin={() => setScreen("home")} />;
     case "feeding":
       return (
-        <ActiveFeeding
+        <FeedingDetails
           breast={activeBreast}
-          onStop={handleStop}
-          onCancel={handleCancel}
+          onSave={handleSave}
+          onCancel={() => setScreen("home")}
         />
       );
     case "history":

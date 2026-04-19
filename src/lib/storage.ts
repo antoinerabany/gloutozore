@@ -28,7 +28,7 @@ export function deleteSession(id: string): void {
 
 export function updateSession(
   id: string,
-  updates: Partial<Pick<FeedingSession, "breast" | "durationSeconds">>
+  updates: Partial<Pick<FeedingSession, "breast" | "durationMinutes" | "note">>
 ): void {
   const sessions = getSessions().map((s) =>
     s.id === id ? { ...s, ...updates } : s

@@ -11,18 +11,16 @@ Breastfeeding tracking app. Must be dead simple — usable one-handed at 3am. PW
 - The suggested one is highlighted/prominent
 - Last feeding info shown below (e.g. "Last: Right, 12min ago")
 
-### Active Feeding (tap a breast)
-- Timer starts and displays elapsed time
-- Big **"Stop"** button
-- Option to cancel (discard the session)
-
-### Feeding Complete (tap stop)
-- Session saved automatically (breast + start time + duration)
-- Returns to home screen with updated next-breast indicator
+### Feeding Details (tap a breast)
+- Optional duration chips: **5min**, **10min**, **15min**, **20min**, **More** (custom input)
+- Optional free-text **note** field (e.g. "baby fussy", "short feed")
+- Big **"Save"** button
+- "Cancel" to discard
+- Minimum flow: tap breast → tap Save (2 taps, no details)
 
 ### History
 - Scrollable list of recent feedings
-- Each entry: breast (L/R), date/time, duration
+- Each entry: breast (L/R), date/time, duration (if set), note (if set)
 - Tap to edit or delete
 - Grouped by day
 
@@ -33,7 +31,8 @@ FeedingSession {
   id: string (uuid)
   breast: 'left' | 'right'
   startedAt: timestamp (ISO string)
-  durationSeconds: number
+  durationMinutes: number | null (optional)
+  note: string | null (optional)
 }
 ```
 
@@ -60,7 +59,7 @@ FeedingSession {
 - Bottle feeding
 - Stats/charts
 - Multiple babies
-- Notes per session
+- ~~Notes per session~~ (added in v1)
 
 ## Tech Stack
 - **Preact + Vite** — React-like API at 3KB, fast dev with HMR
@@ -87,10 +86,10 @@ FeedingSession {
 - "Last feeding" info line (time ago + duration + which breast)
 - Link/button to history
 
-### 4. Active feeding screen
-- Running timer display (mm:ss)
-- Big "Stop" button (bottom of screen, easy thumb reach)
-- "Cancel" option (smaller, top corner)
+### 4. Feeding details screen
+- Optional duration chips: 5min, 10min, 15min, 20min, More (custom)
+- Optional note text field
+- Big "Save" button, "Cancel" to discard
 
 ### 5. History screen
 - List of sessions grouped by day

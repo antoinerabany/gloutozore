@@ -11,10 +11,9 @@ function timeAgo(iso: string): string {
   return `${days}d ago`;
 }
 
-function formatDuration(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return m > 0 ? `${m}min${s > 0 ? ` ${s}s` : ""}` : `${s}s`;
+function formatDuration(minutes: number | null): string {
+  if (minutes == null) return "";
+  return `${minutes}min`;
 }
 
 interface Props {
@@ -32,9 +31,9 @@ export function HomeScreen({ onStart, onShowHistory }: Props) {
 
       {last && (
         <p class="last-feed">
-          Last: {last.breast === "left" ? "L" : "R"} &middot;{" "}
-          {formatDuration(last.durationSeconds)} &middot;{" "}
-          {timeAgo(last.startedAt)}
+          Last: {last.breast === "left" ? "L" : "R"}
+          {last.durationMinutes != null && ` \u00b7 ${formatDuration(last.durationMinutes)}`}
+          {" \u00b7 "}{timeAgo(last.startedAt)}
         </p>
       )}
 

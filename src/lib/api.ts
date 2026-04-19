@@ -33,7 +33,7 @@ export async function pushSession(session: FeedingSession): Promise<void> {
 
 export async function pushUpdate(
   id: string,
-  updates: Partial<Pick<FeedingSession, "breast" | "durationSeconds">>
+  updates: Partial<Pick<FeedingSession, "breast" | "durationMinutes" | "note">>
 ): Promise<void> {
   await fetch(`${API_BASE}/${id}`, {
     method: "PUT",
