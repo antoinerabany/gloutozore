@@ -2,11 +2,15 @@ import { useState, useEffect } from "preact/hooks";
 import type { FeedingSession } from "../lib/types";
 import { getSessions, deleteSession, updateSession, syncFromServer } from "../lib/storage";
 
-function formatTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+function fmtTime(date: Date): string {
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+function formatTimeRange(endIso: string, durationMinutes: number | null): string {
+  const end = new Date(endIso);
+  if (durationMinutes == null) return fmtTime(end);
+  const start = new Date(end.getTime() - durationMinutes * 60000);
+  return `${fmtTime(start)} - ${fmtTime(end)}`;
 }
 
 function groupByDay(
@@ -81,9 +85,8 @@ export function History({ onBack }: Props) {
               <span class={`session-breast ${s.breast}`}>
                 {s.breast === "left" ? "L" : "R"}
               </span>
-              <span class="session-time">{formatTime(s.startedAt)}</span>
-              <span class="session-duration">
-                {s.durationMinutes != null ? `${s.durationMinutes}min` : ""}
+              <span class="session-time">
+                {formatTimeRange(s.startedAt, s.durationMinutes)}
               </span>
               {s.note && <span class="session-note">{s.note}</span>}
               {editingId === s.id && (
