@@ -1,4 +1,5 @@
-import { getLastSession, getNextBreast } from "../lib/storage";
+import { getLastSession, getNextBreast, getSessions } from "../lib/storage";
+import { HeatMap } from "./HeatMap";
 
 function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
@@ -55,6 +56,8 @@ export function HomeScreen({ onStart, onShowHistory }: Props) {
           R
         </button>
       </div>
+
+      <HeatMap sessions={getSessions()} />
 
       <button class="history-btn" onClick={onShowHistory}>
         History
