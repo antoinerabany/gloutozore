@@ -88,6 +88,9 @@ export function History({ onBack }: Props) {
               <span class="session-time">
                 {formatTimeRange(s.startedAt, s.durationMinutes)}
               </span>
+              <span class="session-duration">
+                {s.durationMinutes != null ? `${s.durationMinutes}min` : ""}
+              </span>
               {s.note && <span class="session-note">{s.note}</span>}
               {editingId === s.id && (
                 <div class="session-actions" onClick={(e) => e.stopPropagation()}>
