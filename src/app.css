@@ -294,9 +294,8 @@
 
 /* ===== HeatMap ===== */
 .heatmap {
+  width: 100%;
   margin-bottom: 24px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .heatmap-grid {
