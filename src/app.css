@@ -317,8 +317,7 @@
 }
 
 .heatmap-hour-label {
-  width: 10px;
-  height: 10px;
+  flex: 1;
   font-size: 9px;
   color: var(--text);
   text-align: center;
@@ -326,10 +325,9 @@
 }
 
 .heatmap-cell {
-  width: 10px;
-  height: 10px;
+  flex: 1;
+  aspect-ratio: 1;
   border-radius: 2px;
-  flex-shrink: 0;
 }
 
 /* ===== History ===== */
