@@ -26,6 +26,8 @@ export function HomeScreen({ onStart, onShowHistory }: Props) {
       <h1 class="app-title">Gloutozore</h1>
 
       {last && (
+        <div class="last-feed-section">
+        <h3 class="day-title">Last</h3>
         <div class="session-row last-feed-row">
           <span class={`session-breast ${last.breast}`}>
             {last.breast === "left" ? "L" : "R"}
@@ -37,6 +39,7 @@ export function HomeScreen({ onStart, onShowHistory }: Props) {
             {last.durationMinutes != null ? `${last.durationMinutes}min` : ""}
           </span>
           {last.note && <span class="session-note">{last.note}</span>}
+        </div>
         </div>
       )}
 
