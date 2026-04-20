@@ -1,6 +1,7 @@
 import { useState, useEffect } from "preact/hooks";
 import type { FeedingSession } from "../lib/types";
 import { getSessions, deleteSession, updateSession, syncFromServer } from "../lib/storage";
+import { HeatMap } from "./HeatMap";
 
 function fmtTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -66,6 +67,8 @@ export function History({ onBack }: Props) {
         </button>
         <h2>History</h2>
       </div>
+
+      {sessions.length > 0 && <HeatMap sessions={sessions} />}
 
       {sessions.length === 0 && (
         <p class="empty">No feedings recorded yet.</p>
