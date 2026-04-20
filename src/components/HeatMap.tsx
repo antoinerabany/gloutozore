@@ -56,8 +56,8 @@ function cellColor(value: number, max: number): string {
   return "var(--heatmap-4)";
 }
 
-const AM_HOURS = Array.from({ length: 12 }, (_, i) => i);      // 0-11
-const PM_HOURS = Array.from({ length: 12 }, (_, i) => i + 12); // 12-23
+const AM_HOURS = Array.from({ length: 12 }, (_, i) => i);
+const PM_HOURS = Array.from({ length: 12 }, (_, i) => i + 12);
 
 interface Props {
   sessions: FeedingSession[];
@@ -70,13 +70,28 @@ export function HeatMap({ sessions }: Props) {
   // Newest day first
   const rows = [...grid].reverse();
 
+  // Build interleaved rows: Today AM, Today PM, Yest. AM, Yest. PM, ...
+  const allRows: { label: string; hours: number[]; data: number[] }[] = [];
+  for (let ri = 0; ri < rows.length; ri++) {
+    const label = dayLabel(ri);
+    allRows.push({
+      label: `${label} AM`,
+      hours: AM_HOURS,
+      data: rows[ri],
+    });
+    allRows.push({
+      label: `${label} PM`,
+      hours: PM_HOURS,
+      data: rows[ri],
+    });
+  }
+
   return (
     <div class="heatmap">
       <div class="heatmap-grid">
-        {/* AM header */}
+        {/* Hour labels */}
         <div class="heatmap-row heatmap-header">
           <span class="heatmap-day-label" />
-          <span class="heatmap-period">AM</span>
           {AM_HOURS.map((h) => (
             <span key={h} class="heatmap-hour-label">
               {h % 3 === 0 ? `${h}` : ""}
@@ -84,42 +99,15 @@ export function HeatMap({ sessions }: Props) {
           ))}
         </div>
 
-        {rows.map((row, ri) => (
-          <div key={`am-${ri}`} class="heatmap-row">
-            <span class="heatmap-day-label">{dayLabel(ri)}</span>
-            <span class="heatmap-period" />
-            {AM_HOURS.map((h) => (
+        {allRows.map((row) => (
+          <div key={row.label} class="heatmap-row">
+            <span class="heatmap-day-label">{row.label}</span>
+            {row.hours.map((h) => (
               <span
                 key={h}
                 class="heatmap-cell"
-                style={{ background: cellColor(row[h], max) }}
-                title={row[h] > 0 ? `${row[h]}min` : ""}
-              />
-            ))}
-          </div>
-        ))}
-
-        {/* PM header */}
-        <div class="heatmap-row heatmap-header heatmap-pm-header">
-          <span class="heatmap-day-label" />
-          <span class="heatmap-period">PM</span>
-          {PM_HOURS.map((h) => (
-            <span key={h} class="heatmap-hour-label">
-              {h % 3 === 0 ? `${h}` : ""}
-            </span>
-          ))}
-        </div>
-
-        {rows.map((row, ri) => (
-          <div key={`pm-${ri}`} class="heatmap-row">
-            <span class="heatmap-day-label">{dayLabel(ri)}</span>
-            <span class="heatmap-period" />
-            {PM_HOURS.map((h) => (
-              <span
-                key={h}
-                class="heatmap-cell"
-                style={{ background: cellColor(row[h], max) }}
-                title={row[h] > 0 ? `${row[h]}min` : ""}
+                style={{ background: cellColor(row.data[h], max) }}
+                title={row.data[h] > 0 ? `${row.data[h]}min` : ""}
               />
             ))}
           </div>
