@@ -128,6 +128,12 @@
   transform: scale(1.05);
 }
 
+.last-feed-section {
+  width: 100%;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
 .history-btn {
   margin-top: 12px;
   padding: 10px 24px;
