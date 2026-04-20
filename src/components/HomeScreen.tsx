@@ -40,6 +40,7 @@ export function HomeScreen({ onStart, onShowHistory }: Props) {
           </span>
           {last.note && <span class="session-note">{last.note}</span>}
         </div>
+        <HeatMap sessions={getSessions()} />
         </div>
       )}
 
@@ -61,8 +62,6 @@ export function HomeScreen({ onStart, onShowHistory }: Props) {
           R
         </button>
       </div>
-
-      <HeatMap sessions={getSessions()} />
 
       <button class="history-btn" onClick={onShowHistory}>
         History
