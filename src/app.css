@@ -302,14 +302,14 @@
 .heatmap-grid {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   min-width: fit-content;
 }
 
 .heatmap-row {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 .heatmap-header {
@@ -317,8 +317,8 @@
 }
 
 .heatmap-hour-label {
-  width: 14px;
-  height: 14px;
+  width: 10px;
+  height: 10px;
   font-size: 9px;
   color: var(--text);
   text-align: center;
@@ -326,8 +326,8 @@
 }
 
 .heatmap-cell {
-  width: 14px;
-  height: 14px;
+  width: 10px;
+  height: 10px;
   border-radius: 2px;
   flex-shrink: 0;
 }
