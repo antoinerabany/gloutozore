@@ -1,20 +1,15 @@
 import { getLastSession, getNextBreast, getSessions } from "../lib/storage";
 import { HeatMap } from "./HeatMap";
 
-function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}min ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+function fmtTime(date: Date): string {
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-function formatDuration(minutes: number | null): string {
-  if (minutes == null) return "";
-  return `${minutes}min`;
+function formatTimeRange(endIso: string, durationMinutes: number | null): string {
+  const end = new Date(endIso);
+  if (durationMinutes == null) return fmtTime(end);
+  const start = new Date(end.getTime() - durationMinutes * 60000);
+  return `${fmtTime(start)} - ${fmtTime(end)}`;
 }
 
 interface Props {
@@ -31,11 +26,18 @@ export function HomeScreen({ onStart, onShowHistory }: Props) {
       <h1 class="app-title">Gloutozore</h1>
 
       {last && (
-        <p class="last-feed">
-          Last: {last.breast === "left" ? "L" : "R"}
-          {last.durationMinutes != null && ` \u00b7 ${formatDuration(last.durationMinutes)}`}
-          {" \u00b7 "}{timeAgo(last.startedAt)}
-        </p>
+        <div class="session-row last-feed-row">
+          <span class={`session-breast ${last.breast}`}>
+            {last.breast === "left" ? "L" : "R"}
+          </span>
+          <span class="session-time">
+            {formatTimeRange(last.startedAt, last.durationMinutes)}
+          </span>
+          <span class="session-duration">
+            {last.durationMinutes != null ? `${last.durationMinutes}min` : ""}
+          </span>
+          {last.note && <span class="session-note">{last.note}</span>}
+        </div>
       )}
 
       <p class="next-hint">
