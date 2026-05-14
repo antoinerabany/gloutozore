@@ -1,3 +1,4 @@
+import type { FeedingType } from "../lib/types";
 import { getLastSession, getNextBreast, getSessions } from "../lib/storage";
 import { HeatMap } from "./HeatMap";
 
@@ -12,8 +13,14 @@ function formatTimeRange(endIso: string, durationMinutes: number | null): string
   return `${fmtTime(start)} - ${fmtTime(end)}`;
 }
 
+function breastLabel(breast: FeedingType): string {
+  if (breast === "left") return "L";
+  if (breast === "right") return "R";
+  return "🍼";
+}
+
 interface Props {
-  onStart: (breast: "left" | "right") => void;
+  onStart: (breast: FeedingType) => void;
   onShowHistory: () => void;
 }
 
@@ -30,7 +37,7 @@ export function HomeScreen({ onStart, onShowHistory }: Props) {
         <h3 class="day-title">Last</h3>
         <div class="session-row last-feed-row">
           <span class={`session-breast ${last.breast}`}>
-            {last.breast === "left" ? "L" : "R"}
+            {breastLabel(last.breast)}
           </span>
           <span class="session-time">
             {formatTimeRange(last.startedAt, last.durationMinutes)}
@@ -62,6 +69,10 @@ export function HomeScreen({ onStart, onShowHistory }: Props) {
           R
         </button>
       </div>
+
+      <button class="breast-btn bottle" onClick={() => onStart("bottle")}>
+        🍼
+      </button>
 
       <button class="history-btn" onClick={onShowHistory}>
         History

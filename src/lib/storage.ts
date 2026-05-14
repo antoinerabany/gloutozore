@@ -43,9 +43,11 @@ export function getLastSession(): FeedingSession | null {
 }
 
 export function getNextBreast(): "left" | "right" {
-  const last = getLastSession();
-  if (!last) return "left";
-  return last.breast === "left" ? "right" : "left";
+  for (const s of getSessions()) {
+    if (s.breast === "left") return "right";
+    if (s.breast === "right") return "left";
+  }
+  return "left";
 }
 
 /** Fetch sessions from API and replace local cache */

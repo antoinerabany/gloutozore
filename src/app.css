@@ -189,9 +189,32 @@
   color: #fb923c;
 }
 
+.details-breast.bottle {
+  color: var(--text-h);
+}
+
 .duration-section,
+.end-time-section,
 .note-section {
   width: 100%;
+}
+
+.time-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 18px;
+  text-align: center;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.time-input:focus {
+  border-color: var(--accent);
 }
 
 .section-label {
@@ -421,6 +444,12 @@
 .session-breast.right {
   background: rgba(251, 146, 60, 0.15);
   color: #fb923c;
+}
+
+.session-breast.bottle {
+  background: var(--accent-bg);
+  color: var(--text-h);
+  font-size: 18px;
 }
 
 .session-time {

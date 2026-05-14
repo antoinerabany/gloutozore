@@ -59,6 +59,12 @@ export function History({ onBack }: Props) {
     setSessions(getSessions());
   }
 
+  function breastBadge(breast: FeedingSession["breast"]): string {
+    if (breast === "left") return "L";
+    if (breast === "right") return "R";
+    return "🍼";
+  }
+
   return (
     <div class="history">
       <div class="history-header">
@@ -86,7 +92,7 @@ export function History({ onBack }: Props) {
               }
             >
               <span class={`session-breast ${s.breast}`}>
-                {s.breast === "left" ? "L" : "R"}
+                {breastBadge(s.breast)}
               </span>
               <span class="session-time">
                 {formatTimeRange(s.startedAt, s.durationMinutes)}
@@ -97,12 +103,14 @@ export function History({ onBack }: Props) {
               {s.note && <span class="session-note">{s.note}</span>}
               {editingId === s.id && (
                 <div class="session-actions" onClick={(e) => e.stopPropagation()}>
-                  <button
-                    class="action-btn"
-                    onClick={() => handleToggleBreast(s)}
-                  >
-                    Switch to {s.breast === "left" ? "R" : "L"}
-                  </button>
+                  {s.breast !== "bottle" && (
+                    <button
+                      class="action-btn"
+                      onClick={() => handleToggleBreast(s)}
+                    >
+                      Switch to {s.breast === "left" ? "R" : "L"}
+                    </button>
+                  )}
                   <button
                     class="action-btn delete"
                     onClick={() => handleDelete(s.id)}

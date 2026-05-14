@@ -1,10 +1,33 @@
 import { useState } from "preact/hooks";
+import type { FeedingType } from "../lib/types";
 
 const DURATION_OPTIONS = [5, 10, 15, 20];
 
+function toTimeInputValue(d: Date): string {
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  return `${hh}:${mm}`;
+}
+
+function timeInputToIso(value: string, reference: Date): string {
+  const [hh, mm] = value.split(":").map((n) => parseInt(n, 10));
+  const d = new Date(reference);
+  d.setHours(hh, mm, 0, 0);
+  // If the selected time is in the future (e.g. clock past midnight),
+  // assume the user meant the previous day.
+  if (d.getTime() > Date.now() + 60_000) {
+    d.setDate(d.getDate() - 1);
+  }
+  return d.toISOString();
+}
+
 interface Props {
-  breast: "left" | "right";
-  onSave: (durationMinutes: number | null, note: string | null) => void;
+  breast: FeedingType;
+  onSave: (
+    durationMinutes: number | null,
+    note: string | null,
+    endedAt: string
+  ) => void;
   onCancel: () => void;
 }
 
@@ -13,6 +36,7 @@ export function FeedingDetails({ breast, onSave, onCancel }: Props) {
   const [customDuration, setCustomDuration] = useState("");
   const [showCustom, setShowCustom] = useState(false);
   const [note, setNote] = useState("");
+  const [endTime, setEndTime] = useState(toTimeInputValue(new Date()));
 
   function handleSave() {
     const mins = showCustom
@@ -20,8 +44,12 @@ export function FeedingDetails({ breast, onSave, onCancel }: Props) {
         ? parseInt(customDuration, 10) || null
         : null
       : duration;
-    onSave(mins, note.trim() || null);
+    const endedAt = timeInputToIso(endTime, new Date());
+    onSave(mins, note.trim() || null, endedAt);
   }
+
+  const label =
+    breast === "left" ? "Left" : breast === "right" ? "Right" : "🍼 Bottle";
 
   return (
     <div class="feeding-details">
@@ -30,9 +58,7 @@ export function FeedingDetails({ breast, onSave, onCancel }: Props) {
       </button>
 
       <div class="details-content">
-        <span class={`details-breast ${breast}`}>
-          {breast === "left" ? "Left" : "Right"}
-        </span>
+        <span class={`details-breast ${breast}`}>{label}</span>
 
         <div class="duration-section">
           <p class="section-label">Duration (optional)</p>
@@ -74,6 +100,18 @@ export function FeedingDetails({ breast, onSave, onCancel }: Props) {
               <span class="custom-unit">min</span>
             </div>
           )}
+        </div>
+
+        <div class="end-time-section">
+          <p class="section-label">End time</p>
+          <input
+            type="time"
+            class="time-input"
+            value={endTime}
+            onInput={(e) =>
+              setEndTime((e.target as HTMLInputElement).value)
+            }
+          />
         </div>
 
         <div class="note-section">
