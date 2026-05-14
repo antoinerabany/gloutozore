@@ -206,11 +206,9 @@
   border: 2px solid var(--border);
   background: var(--bg);
   color: var(--text-h);
-  font-size: 18px;
-  text-align: center;
+  font-size: 16px;
   font-family: inherit;
   outline: none;
-  box-sizing: border-box;
 }
 
 .time-input:focus {
